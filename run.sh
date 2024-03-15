@@ -7,7 +7,7 @@ npm install
 # 이미 실행 중인 앱이 있으면 삭제
 pm2 delete cicd_test || true
 
-# 앱을 PM2로 다시 등록 및 시작
+# 앱을 PM2로 다시 등록 및 시작 dfdfd
 pm2 start npm --name "cicd_test" -- run start
 
 # PM2 설정 저장 (서버 재시작시 앱 자동 시작을 위함)
