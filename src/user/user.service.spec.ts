@@ -42,7 +42,7 @@ describe('UserService', () => {
 
   it('should register a new user with hashed password', async () => {
     const email = 'test@example.com';
-    const password = 'password123';
+    const password = 'password1234';
     userRepositoryMock.findOneBy.mockResolvedValue(undefined); // 가정: 사용자가 없음
     await userService.register(email, password);
     expect(userRepositoryMock.save).toHaveBeenCalledWith(
@@ -55,14 +55,14 @@ describe('UserService', () => {
 
   it('should throw ConflictException if user already exists', async () => {
     const email = 'test@example.com';
-    const password = 'password123';
+    const password = 'password1234';
     userRepositoryMock.findOneBy.mockResolvedValue(new User()); // 가정: 사용자가 이미 있음
     await expect(userService.register(email, password)).rejects.toThrow();
   });
 
   it('should login a user and return a JWT token', async () => {
     const email = 'test@example.com';
-    const password = 'password123';
+    const password = 'password1234';
     userRepositoryMock.findOne.mockResolvedValue({
       id: 1,
       email,
@@ -101,7 +101,7 @@ describe('UserService', () => {
 
   it('should toggle a user role from Admin to User', async () => {
     const mockUser = { id: 1, email: 'admin@example.com', role: '1' };
-    userRepositoryMock.update.mockResolvedValue({ affected: 0 }); // 성공적으로 업데이트된 경우
+    userRepositoryMock.update.mockResolvedValue({ affected: 0 }); // 성공적으로 업데이트된 경우ㅇㄹㅇㄹ
     const updatedRole = await userService.toggleRole(mockUser as User);
     expect(updatedRole).toEqual('0');
     expect(userRepositoryMock.update).toHaveBeenCalledWith(
