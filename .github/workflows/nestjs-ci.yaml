@@ -1,22 +1,22 @@
-name: Nestjs CI
+name: Nestjs CI # workflow 이름
 
-on:
-  push:
+on: # workflow's Event -> on이 충족이 됬을 때 이 workflow가 돌아간다
+  push: # 특정 브랜치로 푸쉬하거나,
     branches: [main]
-  pull_request:
+  pull_request: # 특정 브랜치로 풀리퀘 만들면, 이 workflow가 돌아갈 것이다. it's like trigger.
     branches: [main]
 
-jobs:
-  build:
+jobs: # 위의 이벤트가 발생했을때 job을 하나씩 실행 & job들은 의존관계를 가질수 있음
+  lint: # job은 현재 build라는 이름의 1개밖에 없음
     runs-on: ubuntu-latest
 
-    strategy:
+    strategy: # 3가지 버전을 한번에 돌리겠다
       fail-fast: false
       matrix:
         node-version: [16.x, 18.x, 20.x]
 
-    steps:
-      - uses: actions/checkout@v2
+    steps: # 단계(5개) = task의 집합
+      - uses: actions/checkout@v2 # Action
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -25,5 +25,21 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Run tests
-        run: npm test
+        run: yarn test
